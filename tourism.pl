@@ -16,7 +16,7 @@ location(jaipur,romantic,historical,leisure).
 location(kerala,romantic,forest,adventure).
 location(bali,romantic,forest,adventure).
 location(hampi,romantic,historical,leisure).
-location(agra,romantic,historical,leisure).                     
+location(agra,romantic,historical,leisure).
 location(delhi,romantic,historical,leisure).
 
 %family
@@ -60,16 +60,51 @@ location(sunderban,solo,forest,adventure).
 location(kerala,solo,beaches,leisure).
 location(jodhpur,solo,desert,adventure).
 
+%work locations
+worklocation(bangalore,it).
+worklocation(hyderabad,it).
+worklocation(jamshedpur,industrial).
+worklocation(vishakapattanam,industrial).
+worklocation(delhi,central_government).
+
+
 
 /* Rules */
 
-climate().
-
 
 recommendation(Ans, X, Y, Z):- 
-	location(Ans, X, Y, Z).        
+	location(Ans, X, Y, Z).
 
 
+standard_output(Companions):-
+    write('   What kind of destination are you looking for? '),nl,
+    write('1. Beaches'),nl,
+    write('2. Hill Stations'),nl,
+    write('3. Deserts'),nl,
+    write('4. Forest'),nl,
+    write('5. Historical'),nl,
+    read(Destination),nl,
+    
+    write('   What kind of activities are you looking for? '),nl,
+    write('1. Adventure'),nl,
+    write('2. Leisure'),nl,
+    read(Activity),nl,
+
+    write('Thanks to your answers we recommend following destinations to travel:'),nl,
+    recommendation(Location, Companions, Destination, Activity),
+    write(Location),nl,nl.
+
+
+work_output:-
+    write('What kind of work do you have'),nl,
+    write('1. IT work'),nl,
+    write('2. Industrial work'),nl,
+    write('3. Central government work'),nl,
+    read(Work),nl,
+
+    write('Thanks to your answers we recommend following destinations to travel:'),nl,
+    worklocation(Location,Work),
+    write(Location),nl,nl.
 
 
 start:-	
@@ -91,19 +126,16 @@ start:-
     write('4. solo trip'),nl,
     read(Companions),nl,
     
-    write('   What kind of destination are you looking for? '),nl,
-    write('1. Beaches'),nl,
-    write('2. Hill Stations'),nl,
-    write('3. Deserts'),nl,
-    write('4. Forest'),nl,
-    write('5. Historical'),nl,
-    read(Destination),nl,
-    
-    write('   What kind of activities are you looking for? '),nl,
-    write('1. Adventure'),nl,
-    write('2. Leisure'),nl,
-    read(Activity),nl,
-
-    write('Thanks to your answers we recommend following destinations to travel:'),nl,
-    recommendation(Location, Companions, Destination, Activity),
-    write(Location),nl,nl.
+    (	Companions == 'solo' -> 
+        write('What is the purpose of your trip'),nl,
+        write('1. Work trip'),nl,
+    	write('2. Casual trip'),nl,
+        read(Purpose),nl,
+        (   Purpose	== 'work' ->  
+        	work_output
+        	; 
+        	standard_output(Companions)
+         )
+    	;   
+    	standard_output(Companions)
+    ).
